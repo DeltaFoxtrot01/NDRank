@@ -1,0 +1,6 @@
+year:
+  start: 2017
+  end:   2020
+output: "/app/output"
+request: "request2"
+bucket-folder: "grib3"

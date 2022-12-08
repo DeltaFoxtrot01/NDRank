@@ -1,0 +1,16 @@
+name: pweather-distributor
+channels:
+  - conda-forge
+dependencies:
+  - pyyaml
+  - google-cloud-storage
+  - google-auth-oauthlib
+  - google-api-python-client
+  - google-cloud-sdk
+  - pytest
+  - xarray
+  - dask
+  - cfgrib
+  - cffi
+  - cfitsio
+  - netcdf4

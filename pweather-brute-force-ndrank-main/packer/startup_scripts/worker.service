@@ -1,0 +1,14 @@
+[Unit]
+Description=Regular Worker Service
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=ubuntu
+ExecStart=/bin/bash /home/pweather/execute_server.sh
+
+[Install]
+WantedBy=multi-user.target

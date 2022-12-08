@@ -1,0 +1,43 @@
+strategy: "time-interval-grib"
+downloader: "file"
+uploader: "file"
+run-with-sudo: false
+temp-dest-folder: "./temp_download_folder/"
+split: True
+
+metadata-strategy: "low-res-netcdf-grib"
+metadata-attrs:
+  time-variation-dim: "time"
+  time-initial-dim: "step"
+  step: 86400000000000.0
+  #time-gap:
+  #  hour:
+  #    0:
+  #      - "ALL"
+  #    6:
+  #      - "ALL"
+
+  resolution-reduction-parameters:
+    latitude: 2
+    longitude: 4
+
+interval:
+  download-interval: True
+  start: ERA5-1-1981.grib
+  end: ERA5-12-1981.grib
+
+start-point:
+  start-from-file: False
+  file-name: "ERA5-1-1982.grib"
+
+gcp-downloader-settings:
+  bucket-name: "pweather-penedocapital"
+  origin-folders:
+    - "anomaly_reduced_resolution/grib2/lat_lon_4"
+    - "anomaly_reduced_resolution/grib2/lat_lon_8"
+
+file-downloader-settings:
+  origin-file: "/home/ddmdavid/second_disk/IST/5ano/tese/pweather-distributor/dev_source_files_grib"
+
+disk-uploader:
+  number-of-disks: 2

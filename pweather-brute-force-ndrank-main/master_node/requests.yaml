@@ -1,0 +1,27 @@
+requests:
+  - request-name: "request1-sst"
+    #number-of-results: 20000
+    time-instances: 3
+    options:
+      data-vars: 
+        - 'sd'
+        - 'sst'
+      correlation-function: 'pcc'
+      ts-neighbour-gap: 3
+      #search-hours:
+      #  - 0
+      #  - 12
+      partial-dataset-parameters:
+        latitude:
+          min: -90
+          max: 0
+      data-var-selection:
+        - "sd"
+      input-step-difference:
+        - 10
+        - 0
+    input-path:
+      sd:
+        - "/home/ddmdavid/second_disk/IST/5ano/tese/pweather-brute-force/extractor/output/1980-01-02T06:00:00.000000000.nc"
+        - "/home/ddmdavid/second_disk/IST/5ano/tese/pweather-brute-force/extractor/output/1980-01-02T09:00:00.000000000.nc"
+        - "/home/ddmdavid/second_disk/IST/5ano/tese/pweather-brute-force/extractor/output/1980-01-02T12:00:00.000000000.nc"

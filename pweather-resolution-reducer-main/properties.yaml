@@ -1,0 +1,51 @@
+downloader: "file"
+uploader: "file"
+download-past-future: False
+reducer-strategies:
+# - nc-standard
+#  - nc-standard-deviation
+  - "dimension-reducer"
+#  - "zero-reducer"
+#  - "netcdf-compressor"
+temp-dest-folder: "/home/ddmdavid/second_disk/IST/5ano/tese/pweather-resolution-reducer/temp_download_folder/"
+reduction-factor: 2
+resulting-average-folder: average
+resulting-standard-deviation-folder: standard-deviation
+interval: 0
+time-first-dim: "time"
+time-variation-dim: "step"
+
+dimensions-to-be-reduced:
+  latitude: 2
+  longitude: 4
+  #time: 2
+
+operation-type: "split-by-vars"
+files-to-download:
+  mode: "all"
+  interval:
+    start: 'ERA5-2-1980.nc'
+    end: 'ERA5-5-1980.nc'
+  specific:
+    - "ERA5-1-1980.nc"
+    - "ERA5-2-1980.nc"
+    - "ERA5-3-1980.nc"
+    - "ERA5-6-1980.nc"
+  months:
+    - 1
+    - 3
+
+gcp-downloader-settings:
+  bucket-name: "pweather-penedocapital"
+  origin-folder: "anomaly_reduced_resolution/grib5/lat_lon_4"
+
+gcp-uploader-settings:
+  bucket-name: "pweather-penedocapital"
+  destination-folder: "grib_r_gaussian"
+
+file-downloader-settings:
+  origin-file: "/home/ddmdavid/second_disk/IST/5ano/tese/portions/grib2_6_months_reduced_4x4"
+
+file-uploader-settings:
+  dest-file: "/home/ddmdavid/second_disk/IST/5ano/tese/pweather-resolution-reducer/dev_source_dev"
+

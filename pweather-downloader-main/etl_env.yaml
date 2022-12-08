@@ -1,0 +1,33 @@
+name: adcerva_etl
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - psycopg2
+  - pandas
+  - pyyaml
+  - xlrd=1.2.0
+  - scipy
+  - beautifulsoup4
+  - html5lib
+  - requests
+  - scikit-learn
+  - statsmodels
+  - xlsxwriter
+  - google-cloud-storage
+  - google-auth-oauthlib
+  - google-api-python-client
+  - google-cloud-sdk
+  - oauth2client
+  - cdsapi
+  - ecmwf-api-client
+  - fastapi
+  - uvicorn
+  - scikit-learn
+  - pytest
+  - numpy
+  - matplotlib
+  - xarray=0.16.0=py_0
+  - cfgrib=0.9.8.5=pyhd8ed1ab_0
+  - cffi=1.14.4=py37h261ae71_0
+  - cfitsio=3.470=hb7c8383_2

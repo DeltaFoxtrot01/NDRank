@@ -1,0 +1,11 @@
+version: '3'
+services: 
+    cds-downloader:
+        build:
+            context: .
+            dockerfile: ./Dockerfile-cdf
+        volumes: 
+            - ./output:/app/output
+            - ./keyfile.json:/app/keyfile.json
+        environment: 
+            - GOOGLE_APPLICATION_CREDENTIALS=/app/keyfile.json

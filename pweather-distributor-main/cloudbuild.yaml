@@ -1,0 +1,22 @@
+#providers can be found here: https://github.com/GoogleCloudPlatform/cloud-builders
+
+steps:
+  #build container
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', ".", "-t", "pweather-distributor"]
+  
+  #run tests
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['run', "pweather-distributor", "conda", "run", "-n", "pweather-distributor", "--no-capture-output", "py.test"]
+
+  #tag the container
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['tag', 'pweather-distributor', 'gcr.io/tempus-319909/pweather-distributor']
+
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/tempus-319909/pweather-distributor']
+timeout: 4500s
+options:
+  diskSizeGb: "10"
+  machineType: 'N1_HIGHCPU_8'

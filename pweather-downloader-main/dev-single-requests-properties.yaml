@@ -1,0 +1,6 @@
+requests:
+  - year: 1996
+    month: 4
+output: "/app/output"
+request: "request2"
+bucket-folder: "grib2"

@@ -1,0 +1,16 @@
+node-id: "node-test"
+network-config:
+  ip: "0.0.0.0"
+  port: 8000
+  kafka-ip: "localhost"
+  kafka-port: 9092
+  available_ports:
+    from: 10000
+    to: 11000
+temporary-folder: "./global_tests/temporary_folder"
+controller: "brute-force"
+service: "dummy-service"
+repository:
+  type: "dummy-repository"
+  paths: 
+    - "./worker_node/testing_dataset"

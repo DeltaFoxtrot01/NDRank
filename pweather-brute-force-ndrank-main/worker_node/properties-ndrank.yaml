@@ -1,0 +1,31 @@
+node-id: "node-dev1"
+network-config:
+  ip: "localhost"
+  port: 8000
+  kafka-ip: "localhost"
+  kafka-port: 9092
+  available_ports:
+    from: 10000
+    to: 11000
+temporary-folder: "./temp_folder"
+controller: "ndrank"
+service: "parameter-candidate-list-service"
+#service: "candidate-list-service"
+#"simple-service"
+repository:
+  type: "month-year-repository"
+  paths: 
+    - "/home/ddmdavid/second_disk/IST/5ano/tese/portions/grib2/portion1"
+  #path: "/home/ddmdavid/second_disk/IST/5ano/tese/grib2_6_months/original"
+low-resolution-service: ""
+#"simple-top-n-service"
+low-resolution-repository:
+  type: "month-year-repository"
+  paths: 
+    - "/home/ddmdavid/second_disk/IST/5ano/tese/portions/grib2/portion1"
+#"month-year-repository"
+  #path: "/home/ddmdavid/second_disk/IST/5ano/tese/grib2_6_months/reduced"
+debug-ts-log: false
+correlation-functions:
+  average-path: ""
+  standard-deviation-path: ""

@@ -1,0 +1,58 @@
+syntax = "proto3";
+package protocol;
+
+
+message DatasetProperties{
+    string file_name = 1;
+    int64 size_of_dataset = 2;
+}
+
+message DatasetInputPaths{
+    string data_variable = 1;
+    repeated DatasetProperties input_files = 2;
+}
+
+message DatasetSelectionParam{
+    string name = 1;
+    float min = 2;
+    float max = 3;
+}
+
+message RequestExtraOptions{
+    repeated string used_data_var = 1;
+    repeated DatasetSelectionParam dataset_selection_params = 2;
+    int32 ts_neighbour_gap = 3;
+    repeated int32 search_hours = 4;
+    repeated int32 input_step_difference = 5;
+    repeated string selection_data_vars = 6;
+}
+
+message SearchRequest{
+    int32 number_of_results = 1;
+    repeated DatasetInputPaths input_files = 2;
+    string request_id = 3;
+    RequestExtraOptions options = 4;
+    string correlation_function = 5;
+}
+
+message AnalogueResponse{
+    string timestamp = 1;
+    double similarity_value = 2;
+    int32 time_instances = 3;
+}
+
+message FilePortMapping{
+    int32 port = 1;
+    string file = 2;
+}
+
+message SearchResponse{
+    repeated AnalogueResponse analogues = 1;
+    repeated FilePortMapping mappings = 2;
+    string request_id = 3;
+    bool reverse_sort_order_corr_function = 4;
+}
+
+service ControllerService{
+    rpc search_analogues(SearchRequest) returns (stream SearchResponse);
+}

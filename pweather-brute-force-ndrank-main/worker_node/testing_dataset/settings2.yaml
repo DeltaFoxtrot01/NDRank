@@ -1,0 +1,11 @@
+metadata:
+  step: 21600000000000.0
+  time-variation-dim: "step"
+  time-initial-dim: "time"
+  data-vars:
+    #- "z"
+    - "t"
+settings:
+  - ERA5-1-1980.nc
+  - ERA5-2-1980.nc
+  - ERA5-3-1980.nc

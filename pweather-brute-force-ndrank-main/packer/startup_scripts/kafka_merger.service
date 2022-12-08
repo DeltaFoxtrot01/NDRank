@@ -1,0 +1,14 @@
+[Unit]
+Description=Service that receives the results from the kafka queue and merges them together
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=pweather
+ExecStart=/bin/bash /home/pweather/execute_server.sh
+
+[Install]
+WantedBy=multi-user.target

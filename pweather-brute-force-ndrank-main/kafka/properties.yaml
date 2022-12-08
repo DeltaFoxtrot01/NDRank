@@ -1,0 +1,9 @@
+network-config:
+  ip: "localhost"
+  port: 9092
+kafka:
+  group-id: "heuristic-queue"
+  client-id: "client-1"
+node-ids:
+  - "node-dev1"
+ # - "node-dev2"

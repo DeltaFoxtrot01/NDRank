@@ -1,0 +1,7 @@
+FROM gcr.io/tempus-319909/pweather-downloader-env
+
+WORKDIR /app
+COPY . /app
+COPY .cdsapirc /root/
+
+CMD conda run -n adcerva_etl --no-capture-output python3 -u main.py

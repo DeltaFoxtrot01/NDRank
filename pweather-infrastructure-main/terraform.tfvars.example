@@ -1,0 +1,7 @@
+region                   = "<region>"
+zone                     = "<zone>"
+project_id               = "<project id>"
+credentials_file         = "<credentials file>"
+tag                      = "<tag>"
+bucket_location          = "<location>"
+github_token             = "<github token>"

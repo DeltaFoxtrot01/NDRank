@@ -1,0 +1,11 @@
+files:
+  - "./output/sfc_era5_20190301_20190331.grib"
+  - "./output/sfc_era5_20190401_20190430.grib"
+  - "./output/sfc_era5_20190501_20190531.grib"
+  - "./output/sfc_era5_20190601_20190630.grib"
+  - "./output/sfc_era5_20190701_20190731.grib"
+  - "./output/sfc_era5_20190801_20190831.grib"
+  - "./output/sfc_era5_20190901_20190930.grib"
+  - "./output/sfc_era5_20191001_20191031.grib"
+  - "./output/sfc_era5_20191101_20191130.grib"
+  - "./output/sfc_era5_20191201_20191231.grib"

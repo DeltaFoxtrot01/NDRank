@@ -1,0 +1,7 @@
+network-config:
+  ip: "IP_HOST"
+  port: 9092
+kafka:
+  group-id: "heuristic-queue"
+  client-id: "client-1"
+node-ids:

@@ -1,0 +1,245 @@
+import logging
+from typing import Any, Dict, Iterable, Iterator, List, Optional, Tuple, Union, cast
+import numpy as np
+import xarray
+from auxiliar.xarray_aux import open_dataset_with_file_name
+from correlation_functions.correlation_statistics import CorrelationStatistics
+from correlation_functions.main_structure import CorrelationFunction
+from correlation_functions.statistics_collection import StatisticsCollection
+from repository.repository_layer import RepositoryLayer, RepositoryMetadata
+from service.constants import CANDIDATE_LIST_SERVICE
+from service.data_types import CandidateContainer, CandidateListManager, InputIterator, ResultContainer
+from service.implementations.brute_force_top_n_service import BruteForceTopNService
+from service.service_main_structure import HeuristicResult, RequestParameters
+import numpy.typing as npt
+from auxiliar.component_injector import component_injector
+
+@component_injector.inject_service(CANDIDATE_LIST_SERVICE)
+class CandidateListService(BruteForceTopNService):
+
+    def _setup_correlation_function_statistics(self) -> None:
+        """Iterates the whole dataset to allow the creation of
+        the required stats in order to generate the candidate 
+        lists
+        """
+        metadata: RepositoryMetadata = self._repository.get_metadata()
+
+        for dataset_part in self._repository.get_dataset():
+            dataset: xarray.Dataset = dataset_part[1]
+            var_time: Union[npt.NDArray[np.timedelta64],np.timedelta64] = \
+                dataset.coords[metadata.time_variation_dim].values
+            init_time: np.datetime64 = \
+                dataset.coords[metadata.time_initial_dim].values #type: ignore
+            iterable: bool = True
+            datetime: np.datetime64
+
+            if not isinstance(var_time, Iterable):
+                var_time = cast(npt.NDArray[np.timedelta64],np.array([var_time]))
+                iterable = False
+
+            for step in var_time:
+                params: Dict[str, Any] = {}
+                params[metadata.time_variation_dim] = step
+                dataset_section: xarray.Dataset
+
+                if iterable:
+                    dataset_section = dataset.sel(params)
+                else:
+                    dataset_section = dataset
+                
+                datetime = init_time + step
+                self._statistics_collection.insert_statistic(datetime,dataset_section)
+
+    def __init__(self, repository: RepositoryLayer) -> None:
+        super().__init__(repository)
+        self._statistics_collection: StatisticsCollection = StatisticsCollection()
+        logging.info("Gathering required statistics for list of candidates, stand by...")
+        self._setup_correlation_function_statistics()
+        self._statistics_collection.print_statistics()
+        logging.info("Statistics required for list of candidates gathered with success")
+
+    def _open_input_as_dataset_with_partial_parameters(self, file_paths: List[str], 
+        request_params: RequestParameters, corr_function: CorrelationFunction, 
+        selection_params: Dict[str,Any], used_data_var: str) -> InputIterator:
+        """Returns the received input as a single iterator already selected with the
+        given parameters
+
+        Args:
+            file_paths (List[str]): paths of the input files
+            request_params (RequestParameters): parameters given from the request
+            corr_function (CorrelationFunction): used correlation function
+            selection_params (Dict[str,Any]): parameter used to decide in which variables 
+            to calculate the similiarty
+            used_data_var (str): data variable being used
+
+        Returns:
+            InputIterator: resulting Iterator
+        """
+        aux: List[xarray.Dataset] = []
+
+        for path in file_paths:
+            aux.append(
+                self._select_dataset_datavar(
+                    request_params,open_dataset_with_file_name(path)
+                    )
+                )
+        return InputIterator(aux, self._repository.get_metadata(),
+            used_data_var,corr_function,selection_params)
+
+    def _select_dataset_datavar(self, request_parameters: RequestParameters,
+        dataset: xarray.Dataset) -> xarray.Dataset:
+        """Verifies if the request parameters request if the parameters should be
+        search in one data var only or not and returns the right dataset
+
+        Args:
+            request_parameters (RequestParameters): parameters received from the request
+            dataset (xarray.Dataset): dataset to select
+
+        Returns:
+            xarray.Dataset: the correct dataset
+        """
+        if not request_parameters.search_data_var is None:
+            try:
+                return dataset[[request_parameters.search_data_var]]
+            except KeyError:
+                raise ValueError("Data variable '" + request_parameters.search_data_var + \
+                                 "' does not exist in file")
+        else:
+            return dataset
+
+    def _merge_iterator_with_list(self, candidate_list_iterator: Iterator[np.datetime64], 
+        partial_list: Iterable[np.datetime64]) -> Iterator[HeuristicResult]:
+        
+        for date in partial_list:
+            yield HeuristicResult(str(date),0.0)
+        
+        for date in candidate_list_iterator:
+            yield HeuristicResult(str(date),0.0)
+
+
+    def execute_search(self, file_paths: List[str], request_parameters: RequestParameters, 
+        corr_function: CorrelationFunction, num_results: Optional[int] = None) -> Tuple[Dict[str, ResultContainer], int]:
+        """
+
+        Args:
+            file_paths (List[str]): _description_
+            request_parameters (RequestParameters): _description_
+            corr_function (CorrelationFunction): _description_
+            num_results (Optional[int], optional): _description_. Defaults to None.
+
+        Returns:
+            Tuple[Dict[str, ResultContainer], int]: _description_
+        """
+        """
+        The search process using a list of candidates requires the usage of two search
+        processes. The first with a full brute force search on a partial selection of variables
+        and the second on specific timestamps on all dimensions.
+
+        This can be organized into the following steps:
+        1) create an InputIterator with the right parameters
+        2) obtain the required timestamps to search in
+        3) calculate the possible range for each timestamp
+        4) some values it will not be possible to get the
+        """
+        if request_parameters.dataset_selection_parameters is None:
+            raise ValueError("Request must provide the parameters for the dataset selection")
+
+        selection_params: Dict[str, Any] = {}
+        for elem in request_parameters.dataset_selection_parameters:
+            selection_params[elem.name] = slice(elem.max,elem.min)
+        
+        logging.debug(selection_params)
+
+        if request_parameters.search_data_var is None:
+            raise ValueError("This service requires the selection of one variable")
+        
+        if num_results is None or num_results <= 0:
+            raise ValueError("This service requires a limited number of results")
+        
+        search_data_var: str = request_parameters.search_data_var
+        candidates_temp_holder: Dict[np.datetime64, CandidateContainer] = {}
+        candidate_list: CandidateListManager = CandidateListManager(corr_function,num_results)
+
+        logging.info("Opening input files")
+        metadata: RepositoryMetadata = self._repository.get_metadata()
+        input_iterator: InputIterator = \
+            self._open_input_as_dataset_with_partial_parameters(
+                file_paths, request_parameters, corr_function, selection_params,
+                request_parameters.search_data_var)
+
+        input_size: int = input_iterator.size
+        time_date: Union[np.datetime64, npt.NDArray[np.datetime64]] #only a Union since can return both kinds
+                                                                    #with .values attribute (even tho only the
+                                                                    #np.datetime64 is relevant for this context)
+        step_values: npt.NDArray[np.timedelta64]
+        step_variation: np.timedelta64 = np.timedelta64(int(metadata.step),'ns')
+
+        for dataset_pair in self._repository.get_dataset():
+            logging.info("Searching file " + dataset_pair[0])
+            step_values = dataset_pair[1].coords[metadata.time_variation_dim].values
+            time_date = dataset_pair[1].coords[metadata.time_initial_dim].values
+            iterable: bool = True
+
+            if not isinstance(step_values, Iterable):
+                step_values = cast(npt.NDArray[np.timedelta64],np.array([step_values]))
+                iterable = False
+
+            for step in step_values:
+                if metadata.time_gap_container.is_gap(time_date + step, request_parameters.search_data_var):
+                    continue
+
+                params: Dict[str, Any] = {}
+                params[metadata.time_variation_dim] = step
+                dataset_section: xarray.Dataset
+
+                if iterable:
+                    dataset_section = dataset_pair[1].sel(params)
+                else:
+                    dataset_section = dataset_pair[1]
+                
+                #verify if only one parameter should be searched
+                dataset_section = \
+                    self._select_dataset_datavar(
+                        request_parameters, 
+                        dataset_section).sel(selection_params)
+
+                key: np.datetime64 = time_date + step
+
+                corr_stats: CorrelationStatistics = \
+                    self._statistics_collection.get_statistics(
+                        corr_function.corr_func_name,search_data_var,key)
+
+                best_val: float
+                worst_val: float
+                for input_stats_ts in input_iterator.iterate_with_statistics():
+                    best_val, worst_val = \
+                        corr_function.calculate_partial_value(
+                            input_stats_ts[0],dataset_section.to_array(), 
+                            input_stats_ts[1],corr_stats)
+
+                    if not key in candidates_temp_holder:
+                        candidates_temp_holder[key] = CandidateContainer(best_val, worst_val)
+                    else:
+                        candidates_temp_holder[key].add_value(best_val, worst_val)
+                    
+                    if candidates_temp_holder[key].sum_counter == input_size:
+                        candidate_list.add_value(key, 
+                            candidates_temp_holder[key].best_value  / candidates_temp_holder[key].sum_counter,
+                            candidates_temp_holder[key].worst_value / candidates_temp_holder[key].sum_counter)
+                        del candidates_temp_holder[key]
+                    
+                    key -= step_variation
+                    while metadata.time_gap_container.is_gap(key, request_parameters.search_data_var):
+                        key -= step_variation
+
+            logging.debug(str(candidate_list))
+            logging.debug("Partial values:\n" + str(candidates_temp_holder))
+
+        return self.execute_search_on_ts(
+                        self._merge_iterator_with_list(candidate_list.get_results(),candidates_temp_holder.keys()),
+                        file_paths, request_parameters, corr_function, num_results)
+
+    def execute_search_on_ts(self, result_iterator: Iterator[HeuristicResult], file_paths: List[str], request_parameters: RequestParameters, 
+        corr_function: CorrelationFunction, num_results:Optional[int] = None) -> Tuple[Dict[str, ResultContainer], int]:
+        return super().execute_search_on_ts(result_iterator, file_paths, request_parameters, corr_function,num_results)
+        

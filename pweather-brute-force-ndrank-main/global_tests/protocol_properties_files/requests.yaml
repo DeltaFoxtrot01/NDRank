@@ -1,0 +1,23 @@
+requests:
+  - request-name: "test_request"
+    number-of-results: 20
+    time-instances: 2
+    options:
+      data-vars: 
+        - 'z'
+      correlation-function: 'pcc'
+      ts-neighbour-gap: 0
+    input-path:
+      z:
+        - "./global_tests/input_files/input1"
+        - "./global_tests/input_files/input2"
+        - "./global_tests/input_files/input3"
+#  - request-name: "request2"
+#    number-of-results: 30
+#    input-path:
+#      - "path/to/something"
+#  - request-name: "request3"
+#    number-of-results: 30
+#    input-path:
+#      - "path/to/something"
+      

@@ -1,0 +1,12 @@
+version: '3'
+services: 
+    pweather-resolution-reducer:
+        image: gcr.io/tempus-319909/pweather-resolution-reducer
+        volumes: 
+            - "./average:/app/average"
+            - "./log_files:/app/log_files"
+            - "./key_files/bucket-key.json:/app/key_files/bucket-key.json"
+            - "./properties.yaml:/app/properties.yaml"
+            - "./temp_download_folder:/app/temp_download_folder"
+        environment: 
+            - GOOGLE_APPLICATION_CREDENTIALS=/app/key_files/bucket-key.json

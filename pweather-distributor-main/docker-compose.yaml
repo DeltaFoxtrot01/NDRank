@@ -1,0 +1,11 @@
+version: '3'
+services: 
+    pweather-distributor:
+        privileged: true
+        image: gcr.io/tempus-319909/pweather-distributor
+        volumes: 
+            - ./dev_source_files:/app/dev_source_files
+            - ./key_files/bucket-key.json:/app/key_files/bucket-key.json
+            - ./properties.yaml:/app/properties.yaml
+        environment: 
+            - GOOGLE_APPLICATION_CREDENTIALS=/app/key_files/bucket-key.json

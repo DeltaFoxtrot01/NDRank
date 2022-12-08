@@ -1,0 +1,4 @@
+[pytest]
+testpaths =
+    .
+    ./worker_node/repository/tests/__init__.py

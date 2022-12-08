@@ -1,0 +1,16 @@
+#providers can be found here: https://github.com/GoogleCloudPlatform/cloud-builders
+
+steps:
+  #build container
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', ".", "-f", "Docker-env",  "-t", "pweather-downloader-env"]
+  
+  #tag the container
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['tag', 'pweather-downloader-env', 'gcr.io/tempus-319909/pweather-downloader-env']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/tempus-319909/pweather-downloader-env']
+timeout: 1500s
+options:
+  diskSizeGb: "10"

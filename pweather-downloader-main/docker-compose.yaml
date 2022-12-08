@@ -1,0 +1,12 @@
+version: '3'
+services: 
+    cds-downloader:
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        volumes: 
+            - ./output:/app/output
+            - ./keyfile.json:/app/keyfile.json
+            - ./transfer-properties.yaml:/app/transfer-properties.yaml
+        environment: 
+            - GOOGLE_APPLICATION_CREDENTIALS=/app/keyfile.json

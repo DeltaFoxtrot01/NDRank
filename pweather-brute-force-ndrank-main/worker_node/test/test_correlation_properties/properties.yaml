@@ -1,0 +1,3 @@
+correlation-functions:
+  average-path: "./worker_node/test/test_correlation_properties/average"
+  standard-deviation-path: "./worker_node/test/test_correlation_properties/standard-deviation"

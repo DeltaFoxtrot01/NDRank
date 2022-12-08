@@ -1,0 +1,9 @@
+FROM conda/miniconda3
+
+RUN mkdir -p /env
+COPY ./etl_env.yaml /env/etl_env.yaml
+
+RUN apt update -y
+RUN conda update -n base -c defaults conda
+RUN conda env create -f /env/etl_env.yaml
+ENV PYTHONUMBUFFERED=1

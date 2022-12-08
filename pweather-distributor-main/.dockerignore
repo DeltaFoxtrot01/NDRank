@@ -1,0 +1,8 @@
+./dev_dest_file_0/*
+./dev_dest_file_1/*
+./dev_dest_file_2/*
+./dev_source_files/*
+./key_files/*
+./temp_download_folder/*
+.git
+.pytest_cache

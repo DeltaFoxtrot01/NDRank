@@ -1,0 +1,21 @@
+node-id: "node-dev1"
+network-config:
+  ip: "localhost"
+  port: 8000
+  kafka-ip: "localhost"
+  kafka-port: 9092
+  available_ports:
+    from: 11000
+    to: 12000
+temporary-folder: "./temp_folder"
+controller: "brute-force"
+service: "simple-service"
+#service: "candidate-list-service"
+repository:
+  type: "month-year-repository"
+  #path: "/home/ddmdavid/second_disk/IST/5ano/tese/portions/grib2/portion1_original"
+  path: "/home/ddmdavid/second_disk/IST/5ano/tese/portions/grib2/portion1"
+  #path: "/home/ddmdavid/second_disk/IST/5ano/tese/grib2_6_months/original"
+  paths:
+    - "/home/ddmdavid/second_disk/IST/5ano/tese/grib2_6_months/reduced"
+debug-ts-log: false

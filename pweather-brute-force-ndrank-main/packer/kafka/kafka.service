@@ -1,0 +1,14 @@
+[Unit]
+Description=Service for the kafka server
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=pweather
+ExecStart=/home/pweather/kafka-script.sh
+
+[Install]
+WantedBy=multi-user.target

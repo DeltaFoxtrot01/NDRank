@@ -1,0 +1,16 @@
+results-path: "./results"
+dataset_start_date:
+  year: 1980
+  month: 1
+  day: 1
+  hour: 6
+dataset_end_date:
+  year: 1980
+  month: 2
+  day: 28
+  hour: 18
+node-properties:
+  - ip: "localhost"
+    port: 8000
+  #- ip: "localhost"
+  #  port: 8001

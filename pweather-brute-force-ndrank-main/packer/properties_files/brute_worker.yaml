@@ -1,0 +1,16 @@
+network-config:
+  ip: "IP_HOST"
+  port: 8000
+  available_ports:
+    from: 10000
+    to: 11000
+temporary-folder: "/home/pweather/temp_folder"
+controller: "brute-force"
+service: "SERVICE"
+repository:
+  type: "REPOSITORY"
+  paths: 
+FULL_PATHS
+correlation-functions:
+  average-path: "/home/pweather/parameters/average"
+  standard-deviation-path: "/home/pweather/parameters/standard_deviation"

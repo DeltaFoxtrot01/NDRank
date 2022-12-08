@@ -1,0 +1,9 @@
+files:
+  - ./output/sfc_era5_19801101_19801130.grib
+  - ./output/sfc_era5_19801201_19801231.grib
+  - ./output/sfc_era5_19810101_19810131.grib
+  - ./output/sfc_era5_19810201_19810228.grib
+  - ./output/sfc_era5_19810301_19810331.grib
+  - ./output/sfc_era5_19810401_19810430.grib
+  - ./output/sfc_era5_19810501_19810531.grib
+  - ./output/sfc_era5_19810601_19810630.grib

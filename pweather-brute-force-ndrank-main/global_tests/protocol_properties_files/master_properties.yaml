@@ -1,0 +1,14 @@
+results-path: "./global_tests/results_folder"
+dataset_start_date:
+  year: 1980
+  month: 1
+  day: 1
+  hour: 6
+dataset_end_date:
+  year: 1980
+  month: 3
+  day: 31
+  hour: 18
+node-properties:
+  - ip: "0.0.0.0"
+    port: 8000

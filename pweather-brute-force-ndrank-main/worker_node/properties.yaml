@@ -1,0 +1,19 @@
+node-id: "brute-force"
+network-config:
+  ip: "localhost"
+  port: 8000
+  kafka-ip: "localhost"
+  kafka-port: 9092
+  available_ports:
+    from: 12000
+    to: 13000
+temporary-folder: "./temp_folder"
+controller: "brute-force"
+service: "simple-service"
+repository:
+  type: "month-year-repository"
+  paths: 
+    - "/home/ddmdavid/second_disk/IST/5ano/tese/temp_dataset_files"
+correlation-functions:
+  average-path: ""
+  standard-deviation-path: ""

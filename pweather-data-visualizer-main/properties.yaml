@@ -1,0 +1,33 @@
+#bucket configurations
+gcp-downloader-settings:
+  bucket-name: "pweather-penedocapital"
+  origin-folder: "anomaly/grib1"
+  destination-folder: "./destination_folder"
+
+#result's configuration
+results:
+  folder-path: "./results"
+
+#parameter's paths
+data-parameters:
+  subtract-average: True
+  divide-standard-deviation: True
+  average-path: ""
+  standard-deviation-path: ""
+  
+#dataset configurations
+parameters:
+  data-vars:
+    - "t"
+    - "z"
+  time-var-dim: "step"
+  time-init-dim: "time"
+  other-selection-params:
+    #isobaricInhPa: 250
+
+#dates that should produce 
+wanted-dates:
+  - 12/3/2000-18:00
+  - 1/7/1990-12:00
+  - 1/7/1990-06:00
+  - 1/7/1990-00:00

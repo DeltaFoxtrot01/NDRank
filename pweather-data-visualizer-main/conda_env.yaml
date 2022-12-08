@@ -1,0 +1,27 @@
+name: pweather-data-visualizer
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9.0
+  - pyyaml
+  - pytest
+  - numpy==1.22.4
+  - xarray==2022.3.0
+  - dask
+  - scipy
+  - cfgrib
+  - cffi
+  - cfitsio
+  - netcdf4
+  - mypy
+  - mypy-protobuf
+  - types-pyyaml
+  - pandas-stubs
+  - schema
+  - pandas
+  - matplotlib
+  - google-cloud-storage
+  - google-auth-oauthlib
+  - google-api-python-client
+  - google-cloud-sdk
+  - cartopy

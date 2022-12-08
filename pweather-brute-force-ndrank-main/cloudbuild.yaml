@@ -1,0 +1,22 @@
+#providers can be found here: https://github.com/GoogleCloudPlatform/cloud-builders
+
+steps:
+  #build the AMIs
+  - name: 'gcr.io/tempus-319909/packer'
+    dir: 'packer'
+    args: ['init', "."]
+
+  - name: 'gcr.io/tempus-319909/packer'
+    entrypoint: 'bash'
+    dir: 'packer'
+    args: ['-c', "echo $$GITHUB_TOKEN | xargs -I % packer build -var 'project_id=tempus-319909' -var 'region=us-east4-a' -var 'git_token=%' ."]
+    secretEnv: ['GITHUB_TOKEN']
+  
+timeout: 4500s
+options:
+  diskSizeGb: '10'
+
+availableSecrets:
+  secretManager:
+  - versionName: projects/tempus-319909/secrets/github-token/versions/1
+    env: GITHUB_TOKEN
